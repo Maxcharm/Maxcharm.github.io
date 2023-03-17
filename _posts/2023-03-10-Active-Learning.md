@@ -72,3 +72,41 @@ Some challenges of active learning in deep learning scenario are that 1. Multi-c
 
   
 
+**Not All Labels are Equal**
+
+[The second paper](http://arxiv.org/abs/2106.11921) proposes to use an inconsistency-based acquisition function for ranking and a pseudo-labeling module to label the easy images. We will talk about these two techiniques separately.
+
+- inconsistency-based acquisition function:
+
+  instead of training an ensemble of many models, we can augment each sample. Assume that if the prediction result of a sample and that of its augmentation are similar, then the inconsistency of this sample is low, which means the model is robust for this sample, thus we can assign a lower rank for it.
+
+  To express in a mathematical way, we can define the inconsistency of an image $\Delta$ and its augementation $\hat \Delta$ as:
+  $$
+  I(\Delta) = \max_i\{L_{con_C}(c_i', c_i)\} 
+  $$
+   Where $L_{con_C}(c_i', c_i)$ is defined over each pair of corresponding detection in the original image and augmentation by:
+  $$
+  L_{con_C}(c_i',c_i) = 1/2[KL(c_i',\hat c_i),KL(\hat c_i,c_i')]
+  $$
+  Similarly we can also define the uncertainty of the image (note that we don't use the augmentation in this case) as:
+  $$
+  H(\Delta) = \max_i\{H(c_i)\}
+  $$
+  In the end, the acquisition score of $\Delta$ is:
+  $$
+  A(\Delta) = H(\Delta)\times I(\Delta)
+  $$
+  
+
+- Pseudo-labeling to prevent distribution drift
+
+  we can confidently label some samples when the predidtion confidence is above some threshold and use the labelling as ground truth for the next training cycle. The criterion of pseudo-labeling is:
+  $$
+  \hat y_i^p = 1, \text{if }p=\arg\max(c_i)\text{ and } c^p_i \geq \tau
+  $$
+  One minor issue with this method is that the model could be confident with one prediction in the sample but not the others, the paper suggests that we can tackle it by introducing a pseudo-label loss:
+  $$
+  L_{conf}(\bold c, \bold y, \bold{\hat y}) = -\sum_{i\in Pos}\sum_{p=1}^{|c|}y_{ij}^p\log(c_i^p) - \sum_{i\in Neg}\log(c_i^0) - \sum_{i\in \hat {Pos}}\sum_{p=1}^{|c|}\hat y_{ij}^p\log(c_i^p)
+  $$
+  
+
