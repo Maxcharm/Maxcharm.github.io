@@ -106,7 +106,7 @@ Some challenges of active learning in deep learning scenario are that 1. Multi-c
   $$
   One minor issue with this method is that the model could be confident with one prediction in the sample but not the others, the paper suggests that we can tackle it by introducing a pseudo-label loss:
   $$
-  L_{conf}(\bold c, \bold y, \bold{\hat y}) = -\sum_{i\in Pos}\sum_{p=1}^{|c|}y_{ij}^p\log(c_i^p) - \sum_{i\in Neg}\log(c_i^0) - \sum_{i\in \hat {Pos}}\sum_{p=1}^{|c|}\hat y_{ij}^p\log(c_i^p)
+  L_{conf}(c, y, \hat y) = -\sum_{i\in Pos}\sum_{p=1}^{|c|}y_{ij}^p\log(c_i^p) - \sum_{i\in Neg}\log(c_i^0) - \sum_{i\in \hat {Pos}}\sum_{p=1}^{|c|}\hat y_{ij}^p\log(c_i^p)
   $$
   
 
